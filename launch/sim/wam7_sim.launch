@@ -46,6 +46,7 @@
   <param name="robot_description"
     command="$(find xacro)/xacro.py '$(find lcsr_barrett)/launch/sim/wam7_sim.urdf.xacro'
     prefix:=wam
+    xyz:='0.04 0.46 1.0'
     lua_script:='$(find lcsr_barrett)/lua/wam_sim.lua'
     hand:=$(arg hand) ball:=$(arg ball)
     initial_group:=$(arg initial_group)" />

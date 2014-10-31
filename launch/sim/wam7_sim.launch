@@ -19,7 +19,8 @@
   <arg name="bumblebee" default="false" doc="(bool) Launch the robot with a bumblebee"/>
   <arg name="initial_group" default="joint_control" doc="(string) Initial active controller group"/>
   <arg name="dash" default="true" doc="(bool) If true, display the barrett dashboard."/>
-  <!--<arg name="two_arms" default="false" doc="(bool) If true, bring up two barrett arms instead of one"/>-->
+
+  <!-- choose which arms you want to bring up in simulation -->
   <arg name="arm1" default="true" doc="(bool) Bring up the first Barrett WAM arm (on the left of the stage)"/>
   <arg name="arm2" default="false" doc="(bool) Bring up the second Barrett WAM arm (on the right of the stage)"/>
 

@@ -11,7 +11,7 @@ rtt.setLogLevel("Warning")
 package.path = ros:find("lcsr_barrett") .. "/lua/?.lua" .. ";" .. package.path
 
 require("lcsr_barrett")
-lcsr_barrett(true)
+lcsr_barrett(true,"","/wam/robot_description")
 
 --[[ Start the WAM --]]
 barrett_manager:provides("wam"):initialize()

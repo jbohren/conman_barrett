@@ -42,14 +42,17 @@
     <arg name="world_name" value="$(find lcsr_barrett)/launch/sim/wam.world"/>
   </include>
 
-  <!-- Load WAM URDF -->
-  <param name="robot_description"
-    command="$(find xacro)/xacro.py '$(find lcsr_barrett)/launch/sim/wam7_sim.urdf.xacro'
-    prefix:=wam
-    xyz:='0.04 0.46 1.0'
-    lua_script:='$(find lcsr_barrett)/lua/wam_sim.lua'
-    hand:=$(arg hand) ball:=$(arg ball)
-    initial_group:=$(arg initial_group)" />
+
+  <group ns="wam">
+    <!-- Load WAM URDF -->
+    <param name="robot_description"
+      command="$(find xacro)/xacro.py '$(find lcsr_barrett)/launch/sim/wam7_sim.urdf.xacro'
+      prefix:=wam
+      xyz:='0.04 0.46 1.0'
+      lua_script:='$(find lcsr_barrett)/lua/wam_sim.lua'
+      hand:=$(arg hand) ball:=$(arg ball)
+      initial_group:=$(arg initial_group)" />
+  </group>
 
   <!-- Spawn the robot in Gazebo -->
   <node name="$(anon urdf_spawner)"
@@ -57,7 +60,7 @@
     type="spawn_model"
     respawn="false"
     output="screen"
-    args="-urdf -model wam -param robot_description
+    args="-urdf -model wam -param /wam/robot_description
     -J wam/base_yaw_joint $(arg j0)
     -J wam/shoulder_pitch_joint $(arg j1)
     -J wam/shoulder_yaw_joint $(arg j2)
@@ -80,7 +83,7 @@
     <group ns="barrett_manager">
 
       <node if="$(arg dash)" pkg="rqt_barrett" type="rqt_barrett" name="rqt_barrett">
-        <remap from="robot_description" to="/robot_description"/>
+        <remap from="robot_description" to="/wam/robot_description"/>
         <remap from="joint_states" to="wam/joint_states"/>
       </node>
       <node pkg="joint_state_publisher" type="joint_state_publisher" name="$(anon joint_state_publisher)">
@@ -88,9 +91,10 @@
           ["wam/joint_states", "hand/joint_states"]
         </rosparam>
         <param name="rate" value="50"/>
-        <remap from="robot_description" to="/robot_description"/>
+        <remap from="robot_description" to="/wam/robot_description"/>
       </node>
       <node pkg="robot_state_publisher" type="robot_state_publisher" name="$(anon robot_state_publisher)">
+        <remap from="robot_description" to="/wam/robot_description"/>
         <param name="publish_frequency" value="50"/>
       </node>
 

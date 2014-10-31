@@ -27,7 +27,7 @@
     <param name="robot_description"
       command="$(find xacro)/xacro.py '$(find lcsr_barrett)/launch/sim/wam7_sim.urdf.xacro'
       prefix:=$(arg tf_prefix)
-      oro_prefix:=$(arg oro_prefix)
+      manager_name:=$(arg oro_prefix)barrett_manager
       xyz:='$(arg x) $(arg y) $(arg z)'
       lua_script:='$(arg lua_script)'
       hand:=$(arg hand) ball:=$(arg ball)

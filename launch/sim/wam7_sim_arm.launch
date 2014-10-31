@@ -27,6 +27,7 @@
     <param name="robot_description"
       command="$(find xacro)/xacro.py '$(find lcsr_barrett)/launch/sim/wam7_sim.urdf.xacro'
       prefix:=$(arg tf_prefix)
+      oro_prefix:=$(arg oro_prefix)
       xyz:='$(arg x) $(arg y) $(arg z)'
       lua_script:='$(arg lua_script)'
       hand:=$(arg hand) ball:=$(arg ball)
@@ -55,11 +56,11 @@
 
       <node if="$(arg dash)" pkg="rqt_barrett" type="rqt_barrett" name="rqt_barrett">
         <remap from="robot_description" to="/$(arg tf_prefix)/robot_description"/>
-        <remap from="joint_states" to="$(arg tf_prefix)/joint_states"/>
+        <remap from="joint_states" to="wam/joint_states"/>
       </node>
       <node pkg="joint_state_publisher" type="joint_state_publisher" name="$(anon joint_state_publisher)">
         <rosparam param="source_list" subst_value="true">
-          ["$(arg tf_prefix)/joint_states", "hand/joint_states"]
+          ["wam/joint_states", "hand/joint_states"]
         </rosparam>
         <param name="rate" value="50"/>
         <remap from="robot_description" to="/$(arg tf_prefix)/robot_description"/>

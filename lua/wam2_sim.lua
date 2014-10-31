@@ -14,8 +14,8 @@ require("lcsr_barrett")
 lcsr_barrett(true,"w2","/wam2/robot_description")
 
 --[[ Start the WAM --]]
-barrett_manager:provides("wam"):initialize()
-barrett_manager:provides("wam"):run()
+w2barrett_manager:provides("wam"):initialize()
+w2barrett_manager:provides("wam"):run()
 
 --[[ Start the hand --]]
 if barrett_manager:getProperty("auto_configure_hand"):get() then

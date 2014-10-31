@@ -50,7 +50,7 @@ function lcsr_barrett(sim, prefix, urdf_param)
   scheme:start();
 
   --[[ Set of initially running blocks --]]
-  scheme:enableBlock("devices",true);
-  scheme:enableBlock("joint_control",true);
+  scheme:enableBlock(prefix.."devices",true);
+  scheme:enableBlock(prefix.."joint_control",true);
   --scheme.enableBlock("cart_imp_control",true);
 end

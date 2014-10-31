@@ -5,7 +5,7 @@
    - run with rviz like this for planning demo:
    - rosrun rviz rviz __ns:=/gazebo /planning_scene:=/gazebo/planning_scene /get_planning_scene:=/gazebo/get_planning_scene
    -
-   - rostopic pub /gazebo/barrett_manager/hand/cmd oro_barrett_msgs/BHandCmd "{ mode: [3,3,3,3], cmd: [2.5,2.5,2.5,0.0] }"
+   - rostopic pub /gazebo/barrett_manager/hand/cmd oro_barrett_msgs/BHandCmd "{ mode: [3,3,3,3], cmd: [2.5,2.5,2.5,0.0] }
    - rostopic pub -r 1 /gazebo/traj_rml/joint_traj_point_cmd trajectory_msgs/JointTrajectoryPoint "{ positions: [0.0,0,0,0.0,0,0,0.0] }"
    -->
 
@@ -19,7 +19,9 @@
   <arg name="bumblebee" default="false" doc="(bool) Launch the robot with a bumblebee"/>
   <arg name="initial_group" default="joint_control" doc="(string) Initial active controller group"/>
   <arg name="dash" default="true" doc="(bool) If true, display the barrett dashboard."/>
-  <arg name="two_arms" default="false" doc="(bool) If true, bring up two barrett arms instead of one"/>
+  <!--<arg name="two_arms" default="false" doc="(bool) If true, bring up two barrett arms instead of one"/>-->
+  <arg name="arm1" default="true" doc="(bool) Bring up the first Barrett WAM arm (on the left of the stage)"/>
+  <arg name="arm2" default="false" doc="(bool) Bring up the second Barrett WAM arm (on the right of the stage)"/>
 
   <arg name="j0" default="0.0" doc="(float) Joint 0 initial position"/>
   <arg name="j1" default="0.0" doc="(float) Joint 1 initial position"/>
@@ -43,7 +45,7 @@
     <arg name="world_name" value="$(find lcsr_barrett)/launch/sim/wam.world"/>
   </include>
 
-  <include file="$(find lcsr_barrett)/launch/sim/wam7_sim_arm.launch">
+  <include if="$(arg arm1)" file="$(find lcsr_barrett)/launch/sim/wam7_sim_arm.launch">
     <arg name="planning" value="$(arg planning)"/>
     <arg name="empty" value="$(arg empty)"/>
     <arg name="hand" value="$(arg hand)"/>
@@ -66,7 +68,7 @@
     <arg name="lua_script" value="$(find lcsr_barrett)/lua/wam_sim.lua"/>
   </include>
 
-  <include if="$(arg two_arms)" file="$(find lcsr_barrett)/launch/sim/wam7_sim_arm.launch">
+  <include if="$(arg arm2)" file="$(find lcsr_barrett)/launch/sim/wam7_sim_arm.launch">
     <arg name="planning" value="$(arg planning)"/>
     <arg name="empty" value="$(arg empty)"/>
     <arg name="hand" value="$(arg hand)"/>

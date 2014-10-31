@@ -105,7 +105,7 @@
       <arg name="oro_prefix" value="$(arg oro_prefix)"/>
     </include>
 
-    <rosparam ns="effort_sum" subst_value="true">
+    <rosparam ns="$(arg oro_prefix)effort_sum" subst_value="true">
       dim: 7
       require_heartbeat: false
       heartbeat_max_period: 0.075
@@ -117,6 +117,8 @@
       <arg name="ee_empty" value="$(arg empty)"/>
       <arg name="ee_hand" value="$(arg hand)"/>
       <arg name="ee_ball" value="$(arg ball)"/>
+      <arg name="oro_prefix" value="$(arg oro_prefix)"/>
+      <arg name="tf_prefix" value="$(arg tf_prefix)"/>
     </include>
 
 

@@ -21,8 +21,8 @@
   <arg name="dash" default="true" doc="(bool) If true, display the barrett dashboard."/>
 
   <!-- choose which arms you want to bring up in simulation -->
-  <arg name="arm1" default="true" doc="(bool) Bring up the first Barrett WAM arm (on the left of the stage)"/>
-  <arg name="arm2" default="false" doc="(bool) Bring up the second Barrett WAM arm (on the right of the stage)"/>
+  <arg name="left" default="true" doc="(bool) Bring up the first Barrett WAM arm (on the left of the stage)"/>
+  <arg name="right" default="false" doc="(bool) Bring up the second Barrett WAM arm (on the right of the stage)"/>
 
   <arg name="j0" default="0.0" doc="(float) Joint 0 initial position"/>
   <arg name="j1" default="0.0" doc="(float) Joint 1 initial position"/>
@@ -46,7 +46,7 @@
     <arg name="world_name" value="$(find lcsr_barrett)/launch/sim/wam.world"/>
   </include>
 
-  <include if="$(arg arm1)" file="$(find lcsr_barrett)/launch/sim/wam7_sim_arm.launch">
+  <include if="$(arg left)" file="$(find lcsr_barrett)/launch/sim/wam7_sim_arm.launch">
     <arg name="planning" value="$(arg planning)"/>
     <arg name="empty" value="$(arg empty)"/>
     <arg name="hand" value="$(arg hand)"/>
@@ -69,13 +69,13 @@
     <arg name="lua_script" value="$(find lcsr_barrett)/lua/wam_sim.lua"/>
   </include>
 
-  <include if="$(arg arm2)" file="$(find lcsr_barrett)/launch/sim/wam7_sim_arm.launch">
+  <include if="$(arg right)" file="$(find lcsr_barrett)/launch/sim/wam7_sim_arm.launch">
     <arg name="planning" value="$(arg planning)"/>
     <arg name="empty" value="$(arg empty)"/>
     <arg name="hand" value="$(arg hand)"/>
     <arg name="ball" value="$(arg ball)"/>
     <arg name="bumblebee" value="$(arg bumblebee)"/>
-    <arg name="initial_group" value="$(arg initial_group)"/>
+    <arg name="initial_group" value="w2$(arg initial_group)"/>
     <arg name="dash" value="$(arg dash)"/>
     <arg name="j0" value="$(arg j0)"/>
     <arg name="j1" value="$(arg j1)"/>

@@ -18,10 +18,10 @@ function load_barrett(depl, scheme, prefix, sim, urdf_param)
   --[ sim or hardware barrett_manager component ]--
   if sim then
     depl:import("oro_barrett_sim")
-    manager_type = "oro_barrett_sim::BarettSimManager"
+    manager_type = "oro_barrett_sim::BarrettSimManager"
   else
     depl:import("oro_barrett_hw")
-    manager_type = "oro_barrett_hw::BarettHWManager"
+    manager_type = "oro_barrett_hw::BarrettHWManager"
   end
   
   --[[ load and configure barrett manager --]]

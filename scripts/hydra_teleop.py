@@ -216,9 +216,9 @@ def main():
 
     side = rospy.get_param("~side", "right")
 
-    if side == "right":
+    if side.lower() == "right":
         ht = HydraTeleop(HydraTeleop.RIGHT)
-    elif side == "left":
+    elif side.lower() == "left":
         ht = HydraTeleop(HydraTeleop.LEFT)
     else:
         rospy.logerr("Unrecognized Hydra option for side: %s"%(side))

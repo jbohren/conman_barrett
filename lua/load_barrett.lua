@@ -17,19 +17,12 @@ function load_barrett(depl, scheme, prefix, sim, urdf_param)
 
   --[ sim or hardware barrett_manager component ]--
   if sim then
-<<<<<<< HEAD
-    depl:import("oro_barrett_sim")
-    manager_type = "oro_barrett_sim::BarrettSimManager"
-  else
-    depl:import("oro_barrett_hw")
-=======
     rtt.logl("Info","Creating simulated barrett manager...")
     gs:provides("ros"):import("oro_barrett_sim")
     manager_type = "oro_barrett_sim::BarrettSimManager"
   else
     rtt.logl("Info", "Creating real barrett manager...")
     gs:provides("ros"):import("oro_barrett_hw")
->>>>>>> efb7648e1f6b8ffbdb7c072cc977c2316c814398
     manager_type = "oro_barrett_hw::BarrettHWManager"
   end
 

@@ -40,15 +40,11 @@ function lcsr_barrett(sim, prefix, urdf_param)
   --[[ Load barrett manager, wam --]]
   rtt.log("Loading barret...")
   require("load_barrett")
-<<<<<<< HEAD
-  load_barrett(depl, scheme, prefix, sim, urdf_param)
-=======
-  manager, effort_sum = load_barrett(depl, scheme, prefix, sim)
+  manager, effort_sum = load_barrett(depl, scheme, prefix, sim, urdf_param)
   if not manager then
     rtt.logl("Error", "Failed to create barrett manager, is the WAM plugged in and is the CANBus properly configured?");
     return false;
   end
->>>>>>> efb7648e1f6b8ffbdb7c072cc977c2316c814398
 
   --[[ Load controllers --]]
   require("load_controllers")
@@ -58,11 +54,7 @@ function lcsr_barrett(sim, prefix, urdf_param)
   scheme:start();
 
   --[[ Set of initially running blocks --]]
-<<<<<<< HEAD
   scheme:enableBlock(prefix.."devices",true);
   scheme:enableBlock(prefix.."joint_control",true);
   --scheme.enableBlock("cart_imp_control",true);
-=======
-  return scheme:enableBlock("devices",true);
->>>>>>> efb7648e1f6b8ffbdb7c072cc977c2316c814398
 end

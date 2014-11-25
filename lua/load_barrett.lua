@@ -17,13 +17,22 @@ function load_barrett(depl, scheme, prefix, sim, urdf_param)
 
   --[ sim or hardware barrett_manager component ]--
   if sim then
+<<<<<<< HEAD
     depl:import("oro_barrett_sim")
     manager_type = "oro_barrett_sim::BarrettSimManager"
   else
     depl:import("oro_barrett_hw")
+=======
+    rtt.logl("Info","Creating simulated barrett manager...")
+    gs:provides("ros"):import("oro_barrett_sim")
+    manager_type = "oro_barrett_sim::BarrettSimManager"
+  else
+    rtt.logl("Info", "Creating real barrett manager...")
+    gs:provides("ros"):import("oro_barrett_hw")
+>>>>>>> efb7648e1f6b8ffbdb7c072cc977c2316c814398
     manager_type = "oro_barrett_hw::BarrettHWManager"
   end
-  
+
   --[[ load and configure barrett manager --]]
   manager_name = prefix.."barrett_manager"
 
@@ -34,15 +43,22 @@ function load_barrett(depl, scheme, prefix, sim, urdf_param)
       manager_exists = true
     end
   end
+
   if not manager_exists then
-    depl:loadComponent(manager_name, manager_type)
+    loaded = depl:loadComponent(manager_name, manager_type)
+    if not loaded then
+      rtt.logl("Error", "Could not load manager: "..manager_type)
+      return nil, nil
+    end
   end
 
   manager = depl:getPeer(manager_name)
   manager:loadService("rosparam")
   manager:provides("rosparam"):getAll()
   manager:provides("rosparam"):getParam(urdf_param,"robot_description")
-  manager:configure()
+  if not manager:configure() then
+    return nil, nil
+  end
 
   --[[ configure effort sum --]]
   effort_sum_name = prefix.."effort_sum"

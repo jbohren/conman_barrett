@@ -68,6 +68,7 @@
     <arg name="tf_prefix" value="wam"/>
     <arg name="oro_prefix" value=""/>
     <arg name="lua_script" value="$(find lcsr_barrett)/lua/wam_sim.lua"/>
+    <arg name="rescuer" value="$(arg rescuer)"/>
   </include>
 
   <include if="$(arg right)" file="$(find lcsr_barrett)/launch/sim/wam7_sim_arm.launch">
@@ -91,6 +92,7 @@
     <arg name="tf_prefix" value="wam2"/>
     <arg name="oro_prefix" value="w2"/>
     <arg name="lua_script" value="$(find lcsr_barrett)/lua/wam2_sim.lua"/>
+    <arg name="rescuer" value="$(arg rescuer)"/>
   </include>
 
 

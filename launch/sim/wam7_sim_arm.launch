@@ -10,6 +10,8 @@
   <arg name="y" default="0.46" doc="(float) y coordinates of the WAM arm"/>
   <arg name="z" default="1.00" doc="(float) z coordinates of the WAM arm"/>
 
+  <arg name="rescuer" default="false" doc="(bool) If true, use the singularity rescuer."/>
+
   <arg name="tf_prefix" default="$(arg tf_prefix)" doc="(string) TF frame prefix, used as robot name"/>
   <arg name="oro_prefix" default="" doc="(string) orocos prefix"/>
   <arg name="lua_script" default="wam_sim.lua" doc="(string) name of the lua script to initialize the arm"/>

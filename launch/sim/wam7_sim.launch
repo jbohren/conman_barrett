@@ -19,6 +19,7 @@
   <arg name="bumblebee" default="false" doc="(bool) Launch the robot with a bumblebee"/>
   <arg name="initial_group" default="joint_control" doc="(string) Initial active controller group"/>
   <arg name="dash" default="true" doc="(bool) If true, display the barrett dashboard."/>
+  <arg name="rescuer" default="false" doc="(bool) If true, use the singularity rescuer."/>
 
   <!-- choose which arms you want to bring up in simulation -->
   <arg name="left" default="true" doc="(bool) Bring up the first Barrett WAM arm (on the left of the stage)"/>
@@ -100,7 +101,5 @@
     args="-urdf -model stage -param stage_model"/>
   <node name="stage_pose_broadcaster" pkg="tf" type="static_transform_publisher"
     args="0 0 0 0 0 0 /world /stage_link 50"/>
-
-
 
 </launch>

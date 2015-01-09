@@ -121,6 +121,16 @@
       <arg name="tf_prefix" value="$(arg tf_prefix)"/>
     </include>
 
+    <!-- Run singularity rescuer -->
+    <include
+      if="$(arg rescuer)"
+      file="$(find lcsr_barrett)/launch/singularity_rescuer.launch">
+      <arg name="ee_empty" value="$(arg empty)"/>
+      <arg name="ee_hand" value="$(arg hand)"/>
+      <arg name="ee_ball" value="$(arg ball)"/>
+      <arg name="oro_prefix" value="$(arg oro_prefix)"/>
+      <arg name="tf_prefix" value="$(arg tf_prefix)"/>
+    </include>
 
   </group>
 

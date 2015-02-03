@@ -5,7 +5,7 @@
    - run with rviz like this for planning demo:
    - rosrun rviz rviz __ns:=/gazebo /planning_scene:=/gazebo/planning_scene /get_planning_scene:=/gazebo/get_planning_scene
    -
-   - rostopic pub /gazebo/barrett_manager/hand/cmd oro_barrett_msgs/BHandCmd "{ mode: [3,3,3,3], cmd: [2.5,2.5,2.5,0.0] }"
+   - rostopic pub /gazebo/barrett_manager/hand/cmd oro_barrett_msgs/BHandCmd "{ mode: [3,3,3,3], cmd: [2.5,2.5,2.5,0.0] }
    - rostopic pub -r 1 /gazebo/traj_rml/joint_traj_point_cmd trajectory_msgs/JointTrajectoryPoint "{ positions: [0.0,0,0,0.0,0,0,0.0] }"
    -->
 
@@ -19,6 +19,11 @@
   <arg name="bumblebee" default="false" doc="(bool) Launch the robot with a bumblebee"/>
   <arg name="initial_group" default="joint_control" doc="(string) Initial active controller group"/>
   <arg name="dash" default="true" doc="(bool) If true, display the barrett dashboard."/>
+  <arg name="rescuer" default="false" doc="(bool) If true, use the singularity rescuer."/>
+
+  <!-- choose which arms you want to bring up in simulation -->
+  <arg name="left" default="true" doc="(bool) Bring up the first Barrett WAM arm (on the left of the stage)"/>
+  <arg name="right" default="false" doc="(bool) Bring up the second Barrett WAM arm (on the right of the stage)"/>
 
   <arg name="j0" default="0.0" doc="(float) Joint 0 initial position"/>
   <arg name="j1" default="0.0" doc="(float) Joint 1 initial position"/>
@@ -42,28 +47,54 @@
     <arg name="world_name" value="$(find lcsr_barrett)/launch/sim/wam.world"/>
   </include>
 
-  <!-- Load WAM URDF -->
-  <param name="robot_description"
-    command="$(find xacro)/xacro.py '$(find lcsr_barrett)/launch/sim/wam7_sim.urdf.xacro'
-    prefix:=wam
-    lua_script:='$(find lcsr_barrett)/lua/wam_sim.lua'
-    hand:=$(arg hand) ball:=$(arg ball)
-    initial_group:=$(arg initial_group)" />
+  <include if="$(arg left)" file="$(find lcsr_barrett)/launch/sim/wam7_sim_arm.launch">
+    <arg name="planning" value="$(arg planning)"/>
+    <arg name="empty" value="$(arg empty)"/>
+    <arg name="hand" value="$(arg hand)"/>
+    <arg name="ball" value="$(arg ball)"/>
+    <arg name="bumblebee" value="$(arg bumblebee)"/>
+    <arg name="initial_group" value="$(arg initial_group)"/>
+    <arg name="dash" value="$(arg dash)"/>
+    <arg name="j0" value="$(arg j0)"/>
+    <arg name="j1" value="$(arg j1)"/>
+    <arg name="j2" value="$(arg j2)"/>
+    <arg name="j3" value="$(arg j3)"/>
+    <arg name="j4" value="$(arg j4)"/>
+    <arg name="j5" value="$(arg j5)"/>
+    <arg name="j6" value="$(arg j6)"/>
+    <arg name="x" value="0.04"/>
+    <arg name="y" value="0.46"/>
+    <arg name="z" value="1.00"/>
+    <arg name="tf_prefix" value="wam"/>
+    <arg name="oro_prefix" value=""/>
+    <arg name="lua_script" value="$(find lcsr_barrett)/lua/wam_sim.lua"/>
+    <arg name="rescuer" value="$(arg rescuer)"/>
+  </include>
 
-  <!-- Spawn the robot in Gazebo -->
-  <node name="$(anon urdf_spawner)"
-    pkg="gazebo_ros"
-    type="spawn_model"
-    respawn="false"
-    output="screen"
-    args="-urdf -model wam -param robot_description
-    -J wam/base_yaw_joint $(arg j0)
-    -J wam/shoulder_pitch_joint $(arg j1)
-    -J wam/shoulder_yaw_joint $(arg j2)
-    -J wam/elbow_pitch_joint $(arg j3)
-    -J wam/wrist_yaw_joint $(arg j4)
-    -J wam/wrist_pitch_joint $(arg j5)
-    -J wam/palm_yaw_joint $(arg j6)"/>
+  <include if="$(arg right)" file="$(find lcsr_barrett)/launch/sim/wam7_sim_arm.launch">
+    <arg name="planning" value="$(arg planning)"/>
+    <arg name="empty" value="$(arg empty)"/>
+    <arg name="hand" value="$(arg hand)"/>
+    <arg name="ball" value="$(arg ball)"/>
+    <arg name="bumblebee" value="$(arg bumblebee)"/>
+    <arg name="initial_group" value="w2$(arg initial_group)"/>
+    <arg name="dash" value="$(arg dash)"/>
+    <arg name="j0" value="$(arg j0)"/>
+    <arg name="j1" value="$(arg j1)"/>
+    <arg name="j2" value="$(arg j2)"/>
+    <arg name="j3" value="$(arg j3)"/>
+    <arg name="j4" value="$(arg j4)"/>
+    <arg name="j5" value="$(arg j5)"/>
+    <arg name="j6" value="$(arg j6)"/>
+    <arg name="x" value="0.04"/>
+    <arg name="y" value="-0.46"/>
+    <arg name="z" value="1.00"/>
+    <arg name="tf_prefix" value="wam2"/>
+    <arg name="oro_prefix" value="w2"/>
+    <arg name="lua_script" value="$(find lcsr_barrett)/lua/wam2_sim.lua"/>
+    <arg name="rescuer" value="$(arg rescuer)"/>
+  </include>
+
 
   <!-- Spawn the lcsr stage in Gazebo -->
   <param name="stage_model"
@@ -72,78 +103,5 @@
     args="-urdf -model stage -param stage_model"/>
   <node name="stage_pose_broadcaster" pkg="tf" type="static_transform_publisher"
     args="0 0 0 0 0 0 /world /stage_link 50"/>
-
-  <!-- Create nodes in gazebo namespace -->
-  <group ns="gazebo">
-
-    <group ns="barrett_manager">
-
-      <node if="$(arg dash)" pkg="rqt_barrett" type="rqt_barrett" name="rqt_barrett">
-        <remap from="robot_description" to="/robot_description"/>
-        <remap from="joint_states" to="wam/joint_states"/>
-      </node>
-      <node pkg="joint_state_publisher" type="joint_state_publisher" name="$(anon joint_state_publisher)">
-        <rosparam param="source_list" subst_value="true">
-          ["wam/joint_states", "hand/joint_states"]
-        </rosparam>
-        <param name="rate" value="50"/>
-        <remap from="robot_description" to="/robot_description"/>
-      </node>
-      <node pkg="robot_state_publisher" type="robot_state_publisher" name="$(anon robot_state_publisher)">
-        <param name="publish_frequency" value="50"/>
-      </node>
-
-      <rosparam subst_value="true">
-        # Auto-configuration
-        auto_configure_wam: true
-        auto_configure_hand: $(arg hand)
-        wam_dof: 7
-        wam_urdf_prefix: wam
-
-        # WAM Parameters
-        wam:
-          velocity_smoothing_factor: 0.98
-      </rosparam>
-
-      <!-- If using the BHand -->
-      <group if="$(arg hand)">
-        <param name="hand_urdf_prefix" value="wam/hand"/>
-
-        <!-- Mid-Level hand interface -->
-        <node name="bhand_action_server"
-          pkg="oro_barrett_interface"
-          type="bhand_action_server.py"
-          output="screen"/>
-      </group>
-
-    </group>
-
-    <!-- Barrett Hardwre Config and Orocos Components -->
-    <include file="$(find lcsr_barrett)/launch/sim/orocos_component_params.launch">
-      <arg name="ee_empty" value="$(arg empty)"/>
-      <arg name="ee_ball" value="$(arg ball)"/>
-      <arg name="ee_bumblebee" value="$(arg bumblebee)"/>
-      <arg name="ee_hand" value="$(arg hand)"/>
-    </include>
-
-    <rosparam ns="effort_sum" subst_value="true">
-      dim: 7
-      require_heartbeat: false
-      heartbeat_max_period: 0.075
-    </rosparam>
-
-    <!-- RTT Component parameters -->
-    <include file="$(find lcsr_barrett)/launch/sim/orocos_component_params.launch"/>
-
-    <!-- Moveit -->
-    <include if="$(arg planning)" file="$(find lcsr_barrett)/launch/sim/wam7_planning.launch">
-      <arg name="joint_states_topic" value="barrett_manager/joint_states"/>
-      <arg name="ee_empty" value="$(arg empty)"/>
-      <arg name="ee_hand" value="$(arg hand)"/>
-      <arg name="ee_ball" value="$(arg ball)"/>
-    </include>
-
-
-  </group>
 
 </launch>

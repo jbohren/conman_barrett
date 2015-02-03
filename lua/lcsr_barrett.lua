@@ -2,10 +2,11 @@
 --[[ add lua dir to the lua path --]]
 --package.path = ros:find("lcsr_barrett") .. "/lua/?.lua" .. ";" .. package.path
 
-function lcsr_barrett(sim, prefix)
+function lcsr_barrett(sim, prefix, urdf_param)
   --[[ defaulat args --]]
   local sim = sim or false
   local prefix = prefix or ""
+  local urdf_param = urdf_param or "/robot_description"
 
   --[[ get ROS global service --]]
   depl:import("rtt_ros")
@@ -39,7 +40,7 @@ function lcsr_barrett(sim, prefix)
   --[[ Load barrett manager, wam --]]
   rtt.log("Loading barret...")
   require("load_barrett")
-  manager, effort_sum = load_barrett(depl, scheme, prefix, sim)
+  manager, effort_sum = load_barrett(depl, scheme, prefix, sim, urdf_param)
   if not manager then
     rtt.logl("Error", "Failed to create barrett manager, is the WAM plugged in and is the CANBus properly configured?");
     return false;
@@ -53,5 +54,7 @@ function lcsr_barrett(sim, prefix)
   scheme:start();
 
   --[[ Set of initially running blocks --]]
-  return scheme:enableBlock("devices",true);
+  scheme:enableBlock(prefix.."devices",true);
+  scheme:enableBlock(prefix.."joint_control",true);
+  --scheme.enableBlock("cart_imp_control",true);
 end

@@ -108,7 +108,7 @@ function load_controllers(depl, scheme, prefix)
 
   --[[ Create a setpoint controller for testing traj generation --]]
   traj_setpoint_name = prefix.."traj_setpoint"
-  loadComponent("traj_setpoint","lcsr_controllers::JointSetpoint");
+  loadComponent(prefix.."traj_setpoint","lcsr_controllers::JointSetpoint");
   traj_setpoint = depl:getPeer(traj_setpoint_name)
   connect(wam, "position_out", traj_setpoint, "joint_position_in");
   connect(wam, "velocity_out", traj_setpoint, "joint_velocity_in");

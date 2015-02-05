@@ -333,11 +333,17 @@ class HydraTeleop(object):
             telemanip_cmd.estop = False  # TODO: add master estop control
             self.telemanip_cmd_pub.publish(telemanip_cmd)
 
-
 def main():
     rospy.init_node('hydra_teleop')
 
-    ht = HydraTeleop(HydraTeleop.RIGHT)
+    side = rospy.get_param("~side", "right")
+
+    if side.lower() == "right":
+        ht = HydraTeleop(HydraTeleop.RIGHT)
+    elif side.lower() == "left":
+        ht = HydraTeleop(HydraTeleop.LEFT)
+    else:
+        rospy.logerr("Unrecognized Hydra option for side: %s"%(side))
 
     rospy.spin()
 

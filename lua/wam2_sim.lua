@@ -11,7 +11,7 @@ rtt.setLogLevel("Warning")
 package.path = ros:find("lcsr_barrett") .. "/lua/?.lua" .. ";" .. package.path
 
 require("lcsr_barrett")
-lcsr_barrett(true,"","/wam/robot_description")
+lcsr_barrett(true,"w2","/wam2/robot_description")
 
 --[[ Start the WAM --]]
 barrett_manager:provides("wam"):initialize()
@@ -25,7 +25,3 @@ if barrett_manager:getProperty("auto_configure_hand"):get() then
 else
   rtt.log("No hands!")
 end
-
---[[ Set of initially running blocks --]]
-scheme:enableBlock("joint_control",true);
---scheme.enableBlock("cart_imp_control",true);

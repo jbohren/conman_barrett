@@ -20,6 +20,7 @@
   <arg name="initial_group" default="joint_control" doc="(string) Initial active controller group"/>
   <arg name="dash" default="true" doc="(bool) If true, display the barrett dashboard."/>
   <arg name="rescuer" default="false" doc="(bool) If true, use the singularity rescuer."/>
+  <arg name="bhand_action_server" default="false" doc="(bool) If true, launch bhand action server."/>
 
   <arg name="j0" default="0.0" doc="(float) Joint 0 initial position"/>
   <arg name="j1" default="0.0" doc="(float) Joint 1 initial position"/>
@@ -142,7 +143,7 @@
         <param name="hand_urdf_prefix" value="wam/hand"/>
 
         <!-- Mid-Level hand interface -->
-        <node name="bhand_action_server"
+        <node if="$(arg bhand_action_server)" name="bhand_action_server"
           pkg="oro_barrett_interface"
           type="bhand_action_server.py"
           output="screen"/>
